@@ -1,6 +1,7 @@
 import FormProvider from './store/FormProvider.tsx';
 import FormInput from './components/FormInput.tsx';
 import { type FormEvent, useState } from 'react';
+import { required } from './utils/rules.ts';
 
 function App() {
   const [value, setValue] = useState('');
@@ -11,8 +12,8 @@ function App() {
 
   return (
     <FormProvider onSubmit={handleOnSubmit}>
-      <FormInput value={value} onChange={setValue} rules={[(val: string) => !!val || 'error']}/>
-      <FormInput value={value2} onChange={setValue2} rules={[(val: string) => !!val || 'empty']}/>
+      <FormInput value={value} onChange={setValue} rules={[required()]}/>
+      <FormInput value={value2} onChange={setValue2} rules={[required()]}/>
     </FormProvider>
   );
 }
