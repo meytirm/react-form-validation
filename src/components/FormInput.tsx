@@ -1,11 +1,11 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import FormContext from '../store/FormContext.tsx';
-import type { InputInstanceType } from '../types/input.ts';
+import type { InputHTMLProps, InputInstanceType } from '../types/input.ts';
 
-function FormInput({ value, onChange, rules }: Props) {
+function FormInput(props: Props & InputHTMLProps) {
   const [error, setError] = useState('');
   const useFormContext = useContext(FormContext);
-  const inputValueRef = useRef(value);
+  const inputValueRef = useRef(props.value);
   if (!useFormContext) {
     throw new Error('FormInput must be used within a FormProvider');
   }
@@ -13,12 +13,12 @@ function FormInput({ value, onChange, rules }: Props) {
 
   const inputInstance: InputInstanceType = {
     reset() {
-      onChange('');
+      props.onChange('');
       inputValueRef.current = '';
       this.validate();
     },
     validate() {
-      return rules.some((rule) => {
+      return props.rules.some((rule) => {
         const result = rule(inputValueRef.current);
         if (typeof result === 'string') {
           setError(result);
@@ -31,7 +31,7 @@ function FormInput({ value, onChange, rules }: Props) {
   };
 
   function handleOnChange(inputValue: string) {
-    onChange(inputValue);
+    props.onChange(inputValue);
     inputValueRef.current = inputValue;
     inputInstance.validate();
   }
@@ -46,7 +46,10 @@ function FormInput({ value, onChange, rules }: Props) {
 
   return (
     <div>
-      <input value={value} onChange={(e) => handleOnChange(e.target.value)}/>
+      <input
+        {...props}
+        onChange={(e) => handleOnChange(e.target.value)}
+      />
       {error ? <div>{error}</div> : null}
     </div>
 
@@ -56,7 +59,7 @@ function FormInput({ value, onChange, rules }: Props) {
 export default FormInput;
 
 interface Props {
-  value: string;
   onChange: (value: string) => void;
+  value: string;
   rules: ((value: string) => (boolean | string))[];
 }
