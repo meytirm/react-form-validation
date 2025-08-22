@@ -1,8 +1,8 @@
-import { type FormEvent, type ReactNode, useRef } from 'react';
+import { type FormEvent, type ReactNode, type Ref, useImperativeHandle, useRef } from 'react';
 import FormContext from './FormContext.tsx';
-import type { InputInstanceType } from '../types/input.ts';
+import type { FromRefType, InputInstanceType } from '../types/input.ts';
 
-function FormProvider({ children, preventDefault, onSubmit }: Props) {
+function FormProvider({ children, preventDefault, onSubmit, ref }: Props) {
   const inputs = useRef<InputInstanceType[]>([]);
 
   function registerInput(input: InputInstanceType) {
@@ -11,7 +11,6 @@ function FormProvider({ children, preventDefault, onSubmit }: Props) {
 
   function unregisterInput(input: InputInstanceType) {
     inputs.current = inputs.current.filter(i => i !== input);
-    console.log(inputs.current.length);
   }
 
   function handleOnSubmit(event: FormEvent) {
@@ -24,9 +23,18 @@ function FormProvider({ children, preventDefault, onSubmit }: Props) {
     }
   }
 
+  useImperativeHandle(ref, () => ({
+    validate() {
+      return inputs.current.every(input => input.validate());
+    },
+    reset() {
+      inputs.current.forEach(input => input.reset());
+    },
+  }));
+
   return (
-    <FormContext value={{ registerInput, unregisterInput }} >
-      <form onSubmit={handleOnSubmit}>
+    <FormContext value={{ registerInput, unregisterInput }}>
+      <form onSubmit={handleOnSubmit} >
         {children}
       </form>
     </FormContext>
@@ -39,4 +47,5 @@ interface Props {
   children: ReactNode
   onSubmit: (event: FormEvent) => void
   preventDefault?: boolean
+  ref?: Ref<FromRefType>
 }
