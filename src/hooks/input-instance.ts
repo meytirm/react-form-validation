@@ -1,8 +1,17 @@
 import type { InputInstanceType } from '../types/input.ts';
-import { type RefObject, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import FormContext from '../store/FormContext.tsx';
 
-function useInputInstance({ onChange, inputValueRef, rules }: ParametersType) {
+function useInputInstance({ onChange , rules, value }: ParametersType) {
   const [error, setError] = useState('');
+  const useFormContext = useContext(FormContext);
+  const inputValueRef = useRef(value);
+
+  if (!useFormContext) {
+    throw new Error('FormInput must be used within a FormProvider');
+  }
+  const { registerInput, unregisterInput } = useFormContext;
+
   const inputInstance: InputInstanceType = {
     reset() {
       onChange('');
@@ -22,13 +31,27 @@ function useInputInstance({ onChange, inputValueRef, rules }: ParametersType) {
     },
   };
 
-  return { inputInstance, error };
+  function handleOnChange(inputValue: string) {
+    onChange(inputValue);
+    inputValueRef.current = inputValue;
+    inputInstance.validate();
+  }
+
+  useEffect(() => {
+    registerInput(inputInstance);
+
+    return () => {
+      unregisterInput(inputInstance);
+    };
+  }, []);
+
+  return { error, handleOnChange };
 }
 
 export default useInputInstance;
 
 interface ParametersType {
   onChange: (value: string) => void;
-  inputValueRef: RefObject<string>;
   rules: ((value: string) => (boolean | string))[];
+  value: string;
 }
