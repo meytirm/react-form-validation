@@ -1,4 +1,4 @@
-import type { InputInstanceType } from '../types/input.ts';
+import type { InputInstanceType, InputValueType } from '../types/input.ts';
 import { useContext, useEffect, useRef, useState } from 'react';
 import FormContext from '../store/FormContext.tsx';
 
@@ -51,7 +51,7 @@ function useInputInstance({ onChange , rules, value }: ParametersType) {
 export default useInputInstance;
 
 interface ParametersType {
-  onChange: (value: string) => void;
-  rules: ((value: string) => (boolean | string))[];
-  value: string;
+  onChange: (value: InputValueType) => void;
+  rules: ((value: InputValueType) => (boolean | string))[];
+  value: InputValueType;
 }
