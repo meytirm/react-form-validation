@@ -34,7 +34,7 @@ function FormProvider({ children, preventDefault, onSubmit, ref }: Props) {
 
   return (
     <FormContext value={{ registerInput, unregisterInput }}>
-      <form onSubmit={handleOnSubmit} >
+      <form onSubmit={handleOnSubmit}>
         {children}
       </form>
     </FormContext>
