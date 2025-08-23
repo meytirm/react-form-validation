@@ -14,7 +14,6 @@ function FormInput(props: Props & InputProps<HTMLInputElement>) {
       <input
         {...props}
         onChange={(e) => {
-          console.log(e.target.value);
           handleOnChange(e.target.value);
         }}
       />
