@@ -10,3 +10,5 @@ export type RuleType = (value: string) => boolean | string
 export type InputProps<T> = Omit<InputHTMLAttributes<T>, 'onChange' | 'value'>
 
 export type FromRefType = { validate: () => boolean; reset: () => void; }
+
+export type InputValueType = string | number | string[] | boolean | undefined
