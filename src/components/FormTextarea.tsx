@@ -1,4 +1,4 @@
-import type { InputProps } from '../types/input.ts';
+import type { InputProps, InputValueType } from '../types/input.ts';
 import useInputInstance from '../hooks/input-instance.ts';
 
 function FormTextarea(props: Props & InputProps<HTMLTextAreaElement>) {
@@ -23,7 +23,7 @@ function FormTextarea(props: Props & InputProps<HTMLTextAreaElement>) {
 export default FormTextarea;
 
 interface Props {
-  onChange: (value: string) => void;
+  onChange: (value: InputValueType) => void;
   value: string;
-  rules: ((value: string) => (boolean | string))[];
+  rules: ((value: InputValueType) => (boolean | string))[];
 }

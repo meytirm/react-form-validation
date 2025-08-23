@@ -1,4 +1,4 @@
-import type { InputProps } from '../types/input.ts';
+import type { InputProps, InputValueType } from '../types/input.ts';
 import useInputInstance from '../hooks/input-instance.ts';
 
 function FormInput(props: Props & InputProps<HTMLInputElement>) {
@@ -25,7 +25,7 @@ function FormInput(props: Props & InputProps<HTMLInputElement>) {
 export default FormInput;
 
 interface Props {
-  onChange: (value: string) => void;
+  onChange: (value: InputValueType) => void;
   value: string;
-  rules: ((value: string) => (boolean | string))[];
+  rules: ((value: InputValueType) => (boolean | string))[];
 }
